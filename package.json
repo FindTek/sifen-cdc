@@ -1,0 +1,23 @@
+{
+  "name": "sifen-cdc",
+  "version": "1.0.0",
+  "description": "CDC de SIFEN (e-Kuatia, Paraguay): composición, validación, parseo y formato KuDE. Cero dependencias.",
+  "keywords": ["sifen", "ekuatia", "e-kuatia", "cdc", "paraguay", "dnit", "factura-electronica", "dte"],
+  "license": "MIT",
+  "author": "FindTek <info@findtek.com.py> (https://www.findtek.com.py)",
+  "repository": { "type": "git", "url": "git+https://github.com/FindTek/sifen-cdc.git" },
+  "bugs": { "url": "https://github.com/FindTek/sifen-cdc/issues" },
+  "homepage": "https://github.com/FindTek/sifen-cdc#readme",
+  "type": "module",
+  "main": "./dist/cdc.js",
+  "types": "./dist/cdc.d.ts",
+  "exports": { ".": { "types": "./dist/cdc.d.ts", "default": "./dist/cdc.js" } },
+  "files": ["dist", "src"],
+  "engines": { "node": ">=19" },
+  "scripts": {
+    "test": "node --test --experimental-strip-types test/*.test.ts",
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": { "typescript": "^5.7.0" }
+}

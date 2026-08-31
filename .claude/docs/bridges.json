@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "temas": [
+    {
+      "tema": "cdc",
+      "archivo": ".claude/docs/cdc.md",
+      "keywords": ["cdc", "codigo de control", "control code", "sifen", "ekuatia", "kude",
+                   "digito verificador", "check digit", "modulo 11", "dcodseg", "contingencia",
+                   "codigo de seguridad", "manual tecnico"],
+      "rutas": ["src/cdc.ts"]
+    },
+    {
+      "tema": "errores",
+      "archivo": ".claude/docs/errores.md",
+      "keywords": ["errores", "errors", "excepciones", "exception", "cdcinvalidoerror",
+                   "throw", "lanza", "manejo de errores"],
+      "rutas": ["src/cdc.ts"]
+    },
+    {
+      "tema": "testing",
+      "archivo": ".claude/docs/testing.md",
+      "keywords": ["pruebas", "testing", "strip-types", "test runner", "suite",
+                   "github actions", "integracion continua", "matrix"],
+      "rutas": ["test/", ".github/workflows/"]
+    },
+    {
+      "tema": "publicacion",
+      "archivo": ".claude/docs/publicacion.md",
+      "keywords": ["publicacion", "publish", "npm", "build", "dist", "tsconfig",
+                   "semver", "versionado", "tarball", "engines"],
+      "rutas": ["package.json", "tsconfig.json"]
+    },
+    {
+      "tema": "convenciones",
+      "archivo": ".claude/docs/convenciones.md",
+      "keywords": ["convenciones", "styleguide", "estilo de codigo", "lint", "linting", "naming"],
+      "rutas": ["src/", "test/"]
+    }
+  ]
+}
