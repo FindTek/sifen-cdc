@@ -1,0 +1,7 @@
+# Biome formatea con LF. Sin esta regla, un clon en Windows con core.autocrlf=true
+# (el default) trae CRLF al working tree y `npm run lint` falla en un checkout
+# recién hecho, sin que nadie haya tocado una línea.
+* text=auto eol=lf
+
+# Binarios y datos que no deben normalizarse.
+*.png binary
