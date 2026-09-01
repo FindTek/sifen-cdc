@@ -58,7 +58,7 @@ Layout según el **Manual Técnico del SIFEN v150, §10.1**, con los IDs de camp
 
 | Función | Devuelve | Lanza |
 |---|---|---|
-| `componerCdc(campos)` | El CDC de 44 dígitos | `CdcInvalidoError` si algún campo viola el manual |
+| `componerCdc(campos)` | El CDC de 44 dígitos | `CdcInvalidoError` si algún campo viola el manual o si el DV no corresponde al RUC |
 | `validarCdc(cdc)` | `boolean` | Nunca — ante basura devuelve `false` |
 | `analizarCdc(cdc)` | Los campos descompuestos + validez | `CdcInvalidoError` si no son 44 dígitos |
 | `formatearKude(cdc)` | El CDC en grupos de cuatro | `CdcInvalidoError` si no son 44 dígitos |
@@ -99,7 +99,19 @@ Para emitir sin conexión se usa `tipoEmision: 1` (normal) y se transmite al
 reconectar. La emisión offline funciona **porque el CDC se compone localmente**, no
 por la contingencia.
 
-### 3. El código de seguridad tiene reglas, no es un random cualquiera
+### 3. El DV del emisor tiene que corresponder a su RUC
+
+`componerCdc` verifica que `dvRucEmisor` sea el dígito real de `rucEmisor`. Sin ese
+control se puede armar un CDC **estructuralmente impecable** —el dígito 44 cierra
+igual— con un RUC inconsistente adentro. El error no aparece al componer ni al
+validar: aparece cuando SIFEN rechaza el documento, ya firmado.
+
+```ts
+componerCdc({ ...campos, rucEmisor: 44444401, dvRucEmisor: 3 });
+// CdcInvalidoError: dvRucEmisor no corresponde al RUC 44444401: esperado 7, se recibió 3
+```
+
+### 4. El código de seguridad tiene reglas, no es un random cualquiera
 
 El §10.3 exige que `dCodSeg` sea aleatorio, de 9 dígitos, entre `000000001` y
 `999999999`, distinto para cada documento y **distinto del número de documento**.
@@ -118,7 +130,7 @@ formatearKude(cdc)              →  0144 4444 0170 0100 1001 4528 2201 7012 515
 representación gráfica oficial  →  0144 4444 0170 0100 1001 4528 2201 7012 5158 7326 0988
 ```
 
-**23 tests, todos en verde**, sobre Node 22 y 24.
+**26 tests, todos en verde**, sobre Node 22 y 24. El CI además compila el paquete.
 
 ## Alcance
 

@@ -47,6 +47,10 @@ property and buys nothing.
 
 ## Package name
 
-`sifen-cdc`. As of 2026-08-31 it is not published yet: the repo exists but the npm
-name is not claimed by FindTek. Check with `npm view sifen-cdc` before the first
-publish.
+`sifen-cdc`. Checked on 2026-09-01: the name is **free** on npm, but the package is
+not published yet.
+
+Watch out for the sibling package: plain `ruc-paraguay` was **already taken** by
+someone else (v0.0.1), so it ships as **`@findtek/ruc-paraguay`**, with
+`publishConfig.access = "public"` because scoped packages default to private. Always
+check with `npm view <name>` before the first publish.

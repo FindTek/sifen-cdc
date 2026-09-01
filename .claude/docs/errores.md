@@ -13,7 +13,7 @@ al pasaje por estructuras serializadas.
 
 | Función | Ante entrada inválida |
 |---|---|
-| `componerCdc` | **lanza** `CdcInvalidoError` |
+| `componerCdc` | **lanza** `CdcInvalidoError` — incluido cuando `dvRucEmisor` no corresponde al RUC |
 | `analizarCdc` | **lanza** `CdcInvalidoError` |
 | `formatearKude` | **lanza** (delega en `analizarCdc`) |
 | `digitoVerificador` | **lanza** si la cadena no es numérica |

@@ -41,7 +41,7 @@ la fuente primaria.
 
 ## El matrix de CI no puede incluir Node 20
 
-`.github/workflows/test.yml` corre en `22.x` y `24.x`. **No agregues `20.x`**:
+`.github/workflows/test.yml` corre los 26 tests y **además compila** (`tsc --noEmit`) en `22.x` y `24.x`. **No agregues `20.x`**:
 `--experimental-strip-types` recién existe desde Node 22.6, así que el job fallaría
 por una razón que no tiene nada que ver con el código.
 

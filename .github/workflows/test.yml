@@ -17,3 +17,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: node --test --experimental-strip-types test/*.test.ts
+      # El build no lo cubren los tests: sin este paso, un tsconfig roto
+      # recién aparecería en el `npm publish`.
+      - run: npm install --no-save typescript@5 @biomejs/biome@2
+      - run: npx tsc -p tsconfig.json --noEmit
+      - run: npx biome check src test

@@ -123,7 +123,8 @@ export function digitoVerificador(cadena: string, baseMax = 11): number {
  * Compone el CDC de 44 dígitos. Es **determinista y pura**: el código de
  * seguridad entra como dato, no se genera acá.
  *
- * @throws {CdcInvalidoError} si algún campo viola el Manual Técnico.
+ * @throws {CdcInvalidoError} si algún campo viola el Manual Técnico, o si
+ *   `dvRucEmisor` no corresponde al RUC de `rucEmisor`.
  *
  * @example
  * componerCdc({
@@ -149,6 +150,21 @@ export function componerCdc(campos: CamposCdc): string {
       );
     }
     cuerpo += String(valor).padStart(ancho, "0");
+  }
+
+  // El DV del emisor tiene que corresponder a su RUC. Sin este control se puede
+  // componer un CDC estructuralmente perfecto —el dígito 44 cierra igual— con un
+  // RUC inconsistente adentro: el error recién aparece cuando SIFEN lo rechaza,
+  // con el documento ya firmado.
+  //
+  // El RUC usa el mismo módulo 11 que el CDC, y el relleno con ceros a la
+  // izquierda no altera el resultado porque los pesos se anclan a la derecha.
+  const dvEsperado = digitoVerificador(String(campos.rucEmisor).padStart(8, "0"));
+  if (campos.dvRucEmisor !== dvEsperado) {
+    throw new CdcInvalidoError(
+      `dvRucEmisor no corresponde al RUC ${campos.rucEmisor}: ` +
+        `esperado ${dvEsperado}, se recibió ${campos.dvRucEmisor}`,
+    );
   }
 
   // Manual Técnico §10.3: el código de seguridad es positivo y distinto del

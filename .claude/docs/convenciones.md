@@ -1,14 +1,15 @@
 ---
 generated: 2026-08-31T20:45:42-03:00
 source: 4d-init
-evidence: medium
+evidence: high
 ---
 
 # Convenciones
 
-> Medido sobre `src/cdc.ts` y `test/cdc.test.ts`. **No hay linter configurado** en el
-> repo (ni ESLint, ni Prettier, ni Biome), así que nada de esto se aplica solo: son
-> convenciones sostenidas a mano.
+> Medido sobre `src/cdc.ts` y `test/cdc.test.ts`. Desde la 2.0.0 **las convenciones
+> de formato las aplica [Biome](https://biomejs.dev)** (`biome.json`), y el CI las
+> verifica: `npm run lint` falla si el código no cumple. Las de idioma y estructura
+> siguen siendo a mano — ningún linter sabe que los identificadores van en español.
 
 ## Idioma
 
@@ -31,8 +32,11 @@ rompe el puente con la fuente oficial.
 | Indentación | 2 espacios |
 | Comillas | dobles (52 dobles, 0 simples) |
 | Punto y coma | siempre |
-| Ancho de línea | máximo 91; apuntar a ~90 |
+| Ancho de línea | 92, aplicado por Biome |
 | TypeScript | `strict: true` en `tsconfig.json` |
+
+`npm run lint` verifica · `npm run lint:fix` corrige. Biome también ordena los imports,
+así que no los acomodes a mano.
 
 ## Estructura
 

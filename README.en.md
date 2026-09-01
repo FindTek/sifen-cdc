@@ -62,7 +62,7 @@ Layout per the **SIFEN Technical Manual v150, §10.1**, with the XML field IDs:
 
 | Function | Returns | Throws |
 |---|---|---|
-| `componerCdc(campos)` | The 44-digit CDC | `CdcInvalidoError` if a field violates the manual |
+| `componerCdc(campos)` | The 44-digit CDC | `CdcInvalidoError` if a field violates the manual or the RUC check digit is inconsistent |
 | `validarCdc(cdc)` | `boolean` | Never — returns `false` on garbage |
 | `analizarCdc(cdc)` | Decomposed fields + validity | `CdcInvalidoError` if not 44 digits |
 | `formatearKude(cdc)` | The CDC in groups of four | `CdcInvalidoError` if not 44 digits |
@@ -103,7 +103,19 @@ table of contents.
 To issue offline you use `tipoEmision: 1` (normal) and transmit on reconnect. Offline
 issuing works **because the CDC is composed locally**, not because of contingency mode.
 
-### 3. The security code has rules — it is not just any random number
+### 3. The issuer's check digit must match their RUC
+
+`componerCdc` verifies that `dvRucEmisor` is the real check digit of `rucEmisor`.
+Without that check you can build a **structurally flawless** CDC — its 44th digit adds
+up fine — carrying an inconsistent RUC inside. The error surfaces neither on compose
+nor on validate: it surfaces when SIFEN rejects the already-signed document.
+
+```ts
+componerCdc({ ...campos, rucEmisor: 44444401, dvRucEmisor: 3 });
+// CdcInvalidoError: dvRucEmisor no corresponde al RUC 44444401: esperado 7, se recibió 3
+```
+
+### 4. The security code has rules — it is not just any random number
 
 §10.3 requires `dCodSeg` to be random, 9 digits, between `000000001` and `999999999`,
 different for every document and **different from the document number**. `componerCdc`
@@ -122,7 +134,7 @@ formatearKude(cdc)                →  0144 4444 0170 0100 1001 4528 2201 7012 5
 official graphical representation →  0144 4444 0170 0100 1001 4528 2201 7012 5158 7326 0988
 ```
 
-**23 tests, all green**, on Node 22 and 24.
+**26 tests, all green**, on Node 22 and 24. CI also compiles the package.
 
 ## Scope
 

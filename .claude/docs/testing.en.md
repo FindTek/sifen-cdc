@@ -42,7 +42,7 @@ the primary source.
 
 ## The CI matrix cannot include Node 20
 
-`.github/workflows/test.yml` runs on `22.x` and `24.x`. **Do not add `20.x`**:
+`.github/workflows/test.yml` runs the 26 tests and **also compiles** (`tsc --noEmit`) on `22.x` and `24.x`. **Do not add `20.x`**:
 `--experimental-strip-types` only exists from Node 22.6 onwards, so the job would fail
 for a reason unrelated to the code.
 

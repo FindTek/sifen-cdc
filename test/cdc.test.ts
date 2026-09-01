@@ -1,12 +1,19 @@
-import { test, describe } from "node:test";
 import assert from "node:assert/strict";
+import { describe, test } from "node:test";
 
 import {
-  componerCdc, analizarCdc, validarCdc, formatearKude,
-  digitoVerificador, generarCodigoSeguridad,
-  TipoDocumento, TipoEmision, TipoContribuyente,
-  CdcInvalidoError, LARGO_CDC,
+  analizarCdc,
   type CamposCdc,
+  CdcInvalidoError,
+  componerCdc,
+  digitoVerificador,
+  formatearKude,
+  generarCodigoSeguridad,
+  LARGO_CDC,
+  TipoContribuyente,
+  TipoDocumento,
+  TipoEmision,
+  validarCdc,
 } from "../src/cdc.ts";
 
 /**
@@ -76,19 +83,55 @@ describe("componerCdc — validaciones del manual", () => {
   });
 
   test("rechaza una fecha inexistente", () => {
-    assert.throws(() => componerCdc({ ...CAMPOS_MANUAL, fechaEmision: "20170230" }), CdcInvalidoError);
-    assert.throws(() => componerCdc({ ...CAMPOS_MANUAL, fechaEmision: "2017-01-25" }), CdcInvalidoError);
-  });
-
-  test("§10.3: el código de seguridad no puede ser el número de documento", () => {
     assert.throws(
-      () => componerCdc({ ...CAMPOS_MANUAL, codigoSeguridad: CAMPOS_MANUAL.numeroDocumento }),
+      () => componerCdc({ ...CAMPOS_MANUAL, fechaEmision: "20170230" }),
+      CdcInvalidoError,
+    );
+    assert.throws(
+      () => componerCdc({ ...CAMPOS_MANUAL, fechaEmision: "2017-01-25" }),
       CdcInvalidoError,
     );
   });
 
+  test("§10.3: el código de seguridad no puede ser el número de documento", () => {
+    assert.throws(
+      () =>
+        componerCdc({ ...CAMPOS_MANUAL, codigoSeguridad: CAMPOS_MANUAL.numeroDocumento }),
+      CdcInvalidoError,
+    );
+  });
+
+  test("rechaza un dvRucEmisor que no corresponde al RUC", () => {
+    // El DV real de 44444401 es 7. Cualquier otro tiene que explotar, aunque el
+    // CDC resultante sea estructuralmente impecable y su dígito 44 cierre bien.
+    for (const dv of [0, 1, 2, 3, 4, 5, 6, 8, 9]) {
+      assert.throws(
+        () => componerCdc({ ...CAMPOS_MANUAL, dvRucEmisor: dv }),
+        CdcInvalidoError,
+        `dvRucEmisor=${dv} debería rechazarse`,
+      );
+    }
+  });
+
+  test("el mensaje del DV nombra el esperado y el recibido", () => {
+    assert.throws(
+      () => componerCdc({ ...CAMPOS_MANUAL, dvRucEmisor: 3 }),
+      /esperado 7, se recibió 3/,
+    );
+  });
+
+  test("el relleno con ceros del RUC no altera su DV", () => {
+    // Los pesos se anclan a la derecha, así que un cero a la izquierda suma 0 y
+    // no desplaza nada. Por eso alcanza con validar sobre la base rellenada a 8.
+    const corto = { ...CAMPOS_MANUAL, rucEmisor: 4185554, dvRucEmisor: 0 };
+    assert.equal(analizarCdc(componerCdc(corto)).rucEmisor, 4185554);
+  });
+
   test("§10.3: el código de seguridad debe ser positivo", () => {
-    assert.throws(() => componerCdc({ ...CAMPOS_MANUAL, codigoSeguridad: 0 }), CdcInvalidoError);
+    assert.throws(
+      () => componerCdc({ ...CAMPOS_MANUAL, codigoSeguridad: 0 }),
+      CdcInvalidoError,
+    );
   });
 
   test("rellena con ceros a la izquierda", () => {
@@ -105,7 +148,7 @@ describe("analizarCdc", () => {
   });
 
   test("informa el dígito esperado cuando no coincide", () => {
-    const roto = CDC_MANUAL.slice(0, 43) + "0";
+    const roto = `${CDC_MANUAL.slice(0, 43)}0`;
     const a = analizarCdc(roto);
     assert.equal(a.valido, false);
     assert.equal(a.digitoVerificadorRecibido, 0);
@@ -114,7 +157,7 @@ describe("analizarCdc", () => {
 
   test("lanza si no son 44 dígitos", () => {
     assert.throws(() => analizarCdc("123"), CdcInvalidoError);
-    assert.throws(() => analizarCdc(CDC_MANUAL + "9"), CdcInvalidoError);
+    assert.throws(() => analizarCdc(`${CDC_MANUAL}9`), CdcInvalidoError);
   });
 
   test("validarCdc devuelve false en vez de lanzar", () => {
@@ -154,15 +197,23 @@ describe("alcance de la detección de errores", () => {
   });
 
   test("transponer dígitos adyacentes se detecta siempre", () => {
-    let detectadas = 0, probadas = 0;
+    let detectadas = 0,
+      probadas = 0;
     for (let i = 0; i < 42; i++) {
       if (CDC_MANUAL[i] === CDC_MANUAL[i + 1]) continue;
       probadas++;
       const alterado =
-        CDC_MANUAL.slice(0, i) + CDC_MANUAL[i + 1] + CDC_MANUAL[i] + CDC_MANUAL.slice(i + 2);
+        CDC_MANUAL.slice(0, i) +
+        CDC_MANUAL[i + 1] +
+        CDC_MANUAL[i] +
+        CDC_MANUAL.slice(i + 2);
       if (!validarCdc(alterado)) detectadas++;
     }
-    assert.equal(detectadas, probadas, `${probadas - detectadas} transposiciones no detectadas`);
+    assert.equal(
+      detectadas,
+      probadas,
+      `${probadas - detectadas} transposiciones no detectadas`,
+    );
   });
 });
 

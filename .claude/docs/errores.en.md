@@ -14,7 +14,7 @@ serialization boundaries.
 
 | Function | On invalid input |
 |---|---|
-| `componerCdc` | **throws** `CdcInvalidoError` |
+| `componerCdc` | **throws** `CdcInvalidoError` — including when `dvRucEmisor` does not match the RUC |
 | `analizarCdc` | **throws** `CdcInvalidoError` |
 | `formatearKude` | **throws** (delegates to `analizarCdc`) |
 | `digitoVerificador` | **throws** if the string is not numeric |

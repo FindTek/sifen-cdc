@@ -46,6 +46,10 @@ propiedad sin ganar nada.
 
 ## Nombre del paquete
 
-`sifen-cdc`. Al 31/08/2026 no está publicado todavía: el repo existe pero el nombre
-en npm no está tomado por FindTek. Verificá con `npm view sifen-cdc` antes del primer
-publish.
+`sifen-cdc`. Verificado el 01/09/2026: el nombre está **libre** en npm, pero el
+paquete todavía no se publicó.
+
+Ojo con el paquete hermano: `ruc-paraguay` a secas **ya estaba tomado** por otro
+(v0.0.1), así que se publica como **`@findtek/ruc-paraguay`**, con
+`publishConfig.access = "public"` porque los scoped son privados por defecto.
+Verificá siempre con `npm view <nombre>` antes del primer publish.

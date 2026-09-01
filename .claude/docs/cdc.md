@@ -56,6 +56,16 @@ Técnico v150 lista el capítulo 14 como **"Operación de Contingencia (Futuro)"
 Para emitir sin conexión se usa `TipoEmision.NORMAL` y se transmite al reconectar. El
 offline funciona porque el CDC se compone localmente, no por la contingencia.
 
+## El DV del emisor se valida contra su RUC
+
+`componerCdc` comprueba que `dvRucEmisor` sea el dígito real de `rucEmisor`. Se agregó
+en la 2.0.0 tras encontrar que aceptaba cualquier dígito de 0 a 9.
+
+Funciona sin dependencia externa porque **el RUC usa el mismo módulo 11 que el CDC**, y
+el relleno con ceros a la izquierda no altera el resultado: los pesos se anclan a la
+derecha, así que un cero suma 0 y no desplaza nada. Por eso alcanza con
+`digitoVerificador(String(rucEmisor).padStart(8, "0"))`.
+
 ## El código de seguridad tiene reglas (§10.3)
 
 `dCodSeg` debe ser aleatorio, de 9 dígitos, entre `000000001` y `999999999`, distinto

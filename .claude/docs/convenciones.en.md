@@ -2,14 +2,15 @@
 generated: 2026-08-31T20:46:40-03:00
 source: 4d-init
 lang: en
-evidence: medium
+evidence: high
 ---
 
 # Conventions
 
-> Measured on `src/cdc.ts` and `test/cdc.test.ts`. **There is no linter configured**
-> in the repo (no ESLint, no Prettier, no Biome), so none of this is enforced
-> automatically: these are conventions held by hand.
+> Measured on `src/cdc.ts` and `test/cdc.test.ts`. Since 2.0.0 the formatting
+> conventions are **enforced by [Biome](https://biomejs.dev)** (`biome.json`) and
+> checked in CI: `npm run lint` fails if the code does not comply. Language and
+> structure are still by hand — no linter knows identifiers must be in Spanish.
 
 ## Language
 
@@ -32,8 +33,11 @@ Translating them breaks the bridge to the official source.
 | Indentation | 2 spaces |
 | Quotes | double (52 double, 0 single) |
 | Semicolons | always |
-| Line width | max 91; aim for ~90 |
+| Line width | 92, enforced by Biome |
 | TypeScript | `strict: true` in `tsconfig.json` |
+
+`npm run lint` checks · `npm run lint:fix` fixes. Biome also sorts imports, so do not
+arrange them by hand.
 
 ## Structure
 

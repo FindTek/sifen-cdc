@@ -58,6 +58,16 @@ Manual's own table of contents lists chapter 14 as
 To issue offline you use `TipoEmision.NORMAL` and transmit on reconnect. Offline works
 because the CDC is composed locally, not because of contingency mode.
 
+## The issuer's check digit is validated against their RUC
+
+`componerCdc` checks that `dvRucEmisor` is the real check digit of `rucEmisor`. Added
+in 2.0.0 after finding it accepted any digit from 0 to 9.
+
+It works without an external dependency because **the RUC uses the same modulo 11 as
+the CDC**, and left zero-padding does not change the result: weights are anchored to
+the right, so a leading zero contributes 0 and shifts nothing. Hence
+`digitoVerificador(String(rucEmisor).padStart(8, "0"))` is enough.
+
 ## The security code has rules (§10.3)
 
 `dCodSeg` must be random, 9 digits, between `000000001` and `999999999`, different for
