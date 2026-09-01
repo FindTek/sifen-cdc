@@ -5,6 +5,7 @@
 **The SIFEN CDC, done right.** Compose, validate, parse and KuDE-format the Control
 Code of the Paraguayan electronic invoice. Zero dependencies.
 
+[![npm](https://img.shields.io/npm/v/sifen-cdc?color=E8645C&label=npm)](https://www.npmjs.com/package/sifen-cdc)
 [![test](https://github.com/FindTek/sifen-cdc/actions/workflows/test.yml/badge.svg)](https://github.com/FindTek/sifen-cdc/actions/workflows/test.yml)
 [![MIT](https://img.shields.io/badge/license-MIT-71332F)](LICENSE)
 [![zero dependencies](https://img.shields.io/badge/dependencies-0-E8645C)](package.json)

@@ -5,6 +5,7 @@
 **El CDC de SIFEN, bien hecho.** Composición, validación, parseo y formato KuDE del
 Código de Control de la factura electrónica paraguaya. Cero dependencias.
 
+[![npm](https://img.shields.io/npm/v/sifen-cdc?color=E8645C&label=npm)](https://www.npmjs.com/package/sifen-cdc)
 [![test](https://github.com/FindTek/sifen-cdc/actions/workflows/test.yml/badge.svg)](https://github.com/FindTek/sifen-cdc/actions/workflows/test.yml)
 [![MIT](https://img.shields.io/badge/licencia-MIT-71332F)](LICENSE)
 [![sin dependencias](https://img.shields.io/badge/dependencias-0-E8645C)](package.json)
